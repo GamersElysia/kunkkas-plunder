@@ -1,11 +1,12 @@
 import pygame
 import sys
 
-size = 960,720
+WINDOW_HEIGHT = 1920
+WINDOW_WIDTH = 1080
+size = WINDOW_HEIGHT, WINDOW_WIDTH
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Kunkka's Plunder")
 
-# Test Comment
 while True:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
