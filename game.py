@@ -44,10 +44,11 @@ def draw_base_hud():
 
 
 def test_spritesheet():
-    for i in range(len(tiles)):
-        row = tiles[i]
+    t = tiles.tiles
+    for i in range(len(t)):
+        row = t[i]
         for j in range(len(row)):
-            tile = tiles[i][j]
+            tile = row[j]
             screen.blit(tile, (40 * j + 20, 40 * i + 20))
 
 
@@ -56,11 +57,11 @@ def draw_board():
     for y in range(h):
         for x in range(w):
             if game_state['board']['fog'][y][x] > 0:
-                tile = tiles[0][1] # fog
+                tile = tiles.fog
             else:
-                tile = tiles[0][0] # ocean
+                tile = tiles.ocean
             if (x, y) == game_state['player']['position']:
-                tile = tiles[9][0] # player tile
+                tile = tiles.player_alive
             screen.blit(tile, (x * TILE_SIZE, y * TILE_SIZE))
 
 
