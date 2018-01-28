@@ -5,13 +5,6 @@ from config import *
 import hud
 
 
-size = WINDOW_WIDTH, WINDOW_HEIGHT
-screen = pygame.display.set_mode(size)
-import tiles
-
-pygame.display.set_caption("Kunkka's Plunder")
-
-
 NUMBER_OF_TREASURES = 10
 
 
@@ -68,22 +61,27 @@ def update():
         if event.type == pygame.QUIT:
             sys.exit()
         if event.type == pygame.KEYDOWN:
-            x, y = game_state['player']['position']
-            if event.key in KEYS_UP:
-                y -= 1
-            if event.key in KEYS_DOWN:
-                y += 1
-            if event.key in KEYS_LEFT:
-                x -= 1
-            if event.key in KEYS_RIGHT:
-                x += 1
-            within_bounds = 0 <= x < GRID_COLUMNS and 0 <= y < GRID_ROWS
-            if within_bounds:
-                game_state['player']['position'] = x, y
+            move_player(event)
 
     # Remove fog at player position
     x, y = game_state['player']['position']
     game_state['board']['fog'][y][x] = 0
+
+
+def move_player(event):
+    print(event)
+    x, y = game_state['player']['position']
+    if event.key in KEYS_UP:
+        y -= 1
+    if event.key in KEYS_DOWN:
+        y += 1
+    if event.key in KEYS_LEFT:
+        x -= 1
+    if event.key in KEYS_RIGHT:
+        x += 1
+    within_bounds = 0 <= x < GRID_COLUMNS and 0 <= y < GRID_ROWS
+    if within_bounds:
+        game_state['player']['position'] = x, y
 
 
 def draw_game():
@@ -111,4 +109,9 @@ def main():
 
 
 if __name__ == '__main__':
+    size = WINDOW_WIDTH, WINDOW_HEIGHT
+    screen = pygame.display.set_mode(size)
+    import tiles
+
+    pygame.display.set_caption("Kunkka's Plunder")
     main()
