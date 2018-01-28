@@ -1,17 +1,40 @@
 import pygame
 import sys
+import colors
+import config
+import hud as hud
 
-WINDOW_HEIGHT = 1920
-WINDOW_WIDTH = 1080
-size = WINDOW_HEIGHT, WINDOW_WIDTH
+
+size = config.WINDOW_WIDTH, config.WINDOW_HEIGHT
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Kunkka's Plunder")
+
+
+def draw_base_play_area():
+    pygame.draw.rect(screen, colors.OCEAN_BLUE, hud.PLAY_AREA_BASE_RECTANGLE)
+
+
+def draw_base_sidebar():
+    pygame.draw.rect(screen, colors.HUD_GREY, hud.SIDEBAR_BASE_RECTANGLE)
+
+
+def draw_base_inventory():
+    pygame.draw.rect(screen, colors.HUD_GREY, hud.INVENTORY_BASE_RECTANGLE)
+
+
+def draw_base_hud():
+    draw_base_play_area()
+    draw_base_sidebar()
+    draw_base_inventory()
+    pygame.display.flip()
+
+
+def draw_game():
+    draw_base_hud()
+
 
 while True:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             sys.exit()
-
-    screen.fill((0, 0, 0))
-    pygame.draw.rect(screen, (0, 0, 128), (0, 0, 100, 100))
-    pygame.display.flip()
+    draw_game()
