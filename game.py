@@ -25,9 +25,7 @@ def draw_base_sidebar():
 
 def draw_inventory_treasures():
     space = WINDOW_WIDTH - (NUMBER_OF_TREASURES*TILE_SIZE)
-    print(space)
     padding = space / (2 * NUMBER_OF_TREASURES)
-    print(padding)
     for i in range(0, NUMBER_OF_TREASURES):
         screen.blit(tiles.treasure_empty, ((2*i+1)*padding + i*TILE_SIZE, WINDOW_HEIGHT * 0.95))
 
@@ -79,7 +77,9 @@ def update():
                 x -= 1
             if event.key in KEYS_RIGHT:
                 x += 1
-            game_state['player']['position'] = x, y
+            within_bounds = 0 < x < GRID_COLUMNS and 0 < y < GRID_ROWS
+            if within_bounds:
+                game_state['player']['position'] = x, y
 
     # Remove fog at player position
     x, y = game_state['player']['position']
