@@ -77,7 +77,7 @@ def update():
                 x -= 1
             if event.key in KEYS_RIGHT:
                 x += 1
-            within_bounds = 0 < x < GRID_COLUMNS and 0 < y < GRID_ROWS
+            within_bounds = 0 <= x < GRID_COLUMNS and 0 <= y < GRID_ROWS
             if within_bounds:
                 game_state['player']['position'] = x, y
 
