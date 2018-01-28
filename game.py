@@ -71,13 +71,13 @@ def update():
             sys.exit()
         if event.type == pygame.KEYDOWN:
             x, y = game_state['player']['position']
-            if event.key == pygame.K_UP:
+            if event.key in KEYS_UP:
                 y -= 1
-            if event.key == pygame.K_DOWN:
+            if event.key in KEYS_DOWN:
                 y += 1
-            if event.key == pygame.K_LEFT:
+            if event.key in KEYS_LEFT:
                 x -= 1
-            if event.key == pygame.K_RIGHT:
+            if event.key in KEYS_RIGHT:
                 x += 1
             game_state['player']['position'] = x, y
 
