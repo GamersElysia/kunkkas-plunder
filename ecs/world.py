@@ -25,8 +25,20 @@ class World:
         if 'name' in kwargs:
             name = kwargs['name']
             if name in self.name_map:
-                return self.name_map[name]
-        return None
+                return [self.name_map[name]]
+            else:
+                return []
+
+        result = []
+        if 'has' in kwargs:
+            for id in self.entities:
+                entity = self.entities[id]
+                for component_type in kwargs['has']:
+                    if not entity.has(component_type):
+                        break
+                    result.append(entity)
+
+        return result
 
     def _set_name(self, entity, name):
         if entity.name in self.name_map:
