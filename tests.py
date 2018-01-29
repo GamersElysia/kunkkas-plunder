@@ -1,6 +1,8 @@
 import unittest
-import game
+
 import pygame
+
+import game
 
 
 class TestBoundaryConditions(unittest.TestCase):
@@ -21,6 +23,7 @@ class TestBoundaryConditions(unittest.TestCase):
         event = pygame.event.Event(pygame.KEYDOWN, {'unicode': '3', 'key': 259, 'mod': 0, 'scancode': 81})
         game.move_player(event)
         self.assertEqual(game.game_state['player']['position'], (1, 1))
+
 
 if __name__ == '__main__':
     unittest.main()

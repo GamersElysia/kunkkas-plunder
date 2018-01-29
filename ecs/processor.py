@@ -1,4 +1,5 @@
 class Processor:
+
     def __init__(self):
         self.world = None
 

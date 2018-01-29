@@ -1,4 +1,5 @@
 class Grid:
+
     def __init__(self, width, height, default_value=None):
         self.width = width
         self.height = height

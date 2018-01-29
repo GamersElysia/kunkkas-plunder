@@ -1,4 +1,5 @@
 class Entity:
+
     def __init__(self, world):
         self._name = None
         self.tags = []

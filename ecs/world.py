@@ -1,6 +1,8 @@
 from . import Entity
 
+
 class World:
+
     def __init__(self):
         self.entities = {}
         self.last_id = 0

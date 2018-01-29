@@ -4,7 +4,9 @@ from components import Grid, Position
 from config import *
 from ecs import Processor
 
+
 class FogOfWar(Processor):
+
     def __init__(self, entity, radius=0):
         super().__init__()
         self.entity = entity

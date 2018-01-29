@@ -1,19 +1,17 @@
-# This class handles sprite sheets
-# This was taken from www.scriptefun.com/transcript-2-using
-# sprite-sheets-and-drawing-the-background
-# I've added some code to fail if the file wasn't found..
-# Note: When calling images_at the rect is the format:
-# (x, y, x + offset, y + offset)
-# https://www.pygame.org/wiki/Spritesheet
+# Based on https://www.pygame.org/wiki/Spritesheet
 
 import copy
+
 import pygame
+
 
 def load(filename):
     """Create a Spritesheet from a filesystem path."""
     return Spritesheet(filename)
 
+
 class Spritesheet:
+
     def __init__(self, filename):
         self.sheet = pygame.image.load(filename).convert()
 
@@ -35,9 +33,8 @@ class Spritesheet:
             image.set_colorkey(colorkey, pygame.RLEACCEL)
         return image
 
-    # Load a whole bunch of images and return them as a list
     def images_at(self, rects, colorkey=None):
-        """Loads multiple images, supply a list of coordinates."""
+        """Loads multiple images from the sheet, given a list of rectangles."""
         return [self.image_at(rect, colorkey) for rect in rects]
 
     def load_grid(self, rect, nx, ny, colorkey=None):

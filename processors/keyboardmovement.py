@@ -4,7 +4,9 @@ from components import Position
 from config import *
 from ecs import Processor
 
+
 class KeyboardMovement(Processor):
+
     def __init__(self, entity):
         super().__init__()
         self.entity = entity
