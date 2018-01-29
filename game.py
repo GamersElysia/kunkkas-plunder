@@ -113,6 +113,7 @@ def main():
     while True:
         update(world)
         draw(screen, world)
+        pygame.time.wait(50)
 
 
 if __name__ == '__main__':
