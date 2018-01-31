@@ -5,29 +5,41 @@ from config import *
 import tiles
 
 
-PLAY_AREA_BASE_RECTANGLE = (0, 0, WINDOW_WIDTH * 0.8, WINDOW_HEIGHT * 0.8)
-SIDEBAR_BASE_RECTANGLE = (WINDOW_WIDTH * 0.8, 0, WINDOW_WIDTH * 0.2, WINDOW_HEIGHT)
-INVENTORY_BASE_RECTANGLE = (0, WINDOW_HEIGHT * 0.83, WINDOW_WIDTH, WINDOW_HEIGHT * 0.2)
+def calc_play_area_base_rectangle(rect):
+    return (0, 0, rect.width * 0.8, rect.height * 0.8)
+
+
+def calc_sidebar_base_rectangle(rect):
+    return (rect.width * 0.8, 0, rect.width * 0.2, rect.height)
+
+
+def calc_inventory_base_rectangle(rect):
+    return (0, rect.height * 0.83, rect.width, rect.height * 0.2)
 
 
 def draw_base_play_area(screen):
-    pygame.draw.rect(screen, colors.OCEAN_BLUE, PLAY_AREA_BASE_RECTANGLE)
+    rect = calc_play_area_base_rectangle(screen.get_rect())
+    pygame.draw.rect(screen, colors.OCEAN_BLUE, rect)
 
 
 def draw_base_sidebar(screen):
-    pygame.draw.rect(screen, colors.HUD_GREY, SIDEBAR_BASE_RECTANGLE)
+    rect = calc_sidebar_base_rectangle(screen.get_rect())
+    pygame.draw.rect(screen, colors.HUD_GREY, rect)
 
 
 def draw_inventory_treasures(screen):
-    space = WINDOW_WIDTH - (NUMBER_OF_TREASURES * TILE_SIZE)
+    space = screen.get_width() - (NUMBER_OF_TREASURES * TILE_SIZE)
     padding = space / (2 * NUMBER_OF_TREASURES)
     for i in range(0, NUMBER_OF_TREASURES):
-        screen.blit(tiles.treasure_empty, ((2 * i + 1) *
-                                           padding + i * TILE_SIZE, WINDOW_HEIGHT * 0.95))
+        screen.blit(
+            tiles.treasure_empty,
+            ((2 * i + 1) * padding + i * TILE_SIZE,
+            screen.get_height() * 0.95))
 
 
 def draw_base_inventory(screen):
-    pygame.draw.rect(screen, colors.HUD_GREY, INVENTORY_BASE_RECTANGLE)
+    rect = calc_inventory_base_rectangle(screen.get_rect())
+    pygame.draw.rect(screen, colors.HUD_GREY, rect)
     draw_inventory_treasures(screen)
 
 

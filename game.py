@@ -38,6 +38,9 @@ def draw_board(screen, world):
 def update(world, **extra_data):
     if pygame.event.peek(pygame.QUIT):
         sys.exit()
+    for resize_event in pygame.event.get(pygame.VIDEORESIZE):
+        screen = pygame.display.set_mode(
+            (resize_event.w, resize_event.h), pygame.RESIZABLE)
     extra_data['events'] = pygame.event.get()
     world.update(**extra_data)
 
@@ -113,6 +116,7 @@ def main():
 if __name__ == '__main__':
     pygame.init()
     pygame.display.set_caption("Kunkka's Plunder")
-    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    screen = pygame.display.set_mode(
+        (WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
     tiles.load()
     main()
