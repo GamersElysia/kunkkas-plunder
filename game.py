@@ -119,8 +119,8 @@ def main():
 
 
 if __name__ == '__main__':
-    size = WINDOW_WIDTH, WINDOW_HEIGHT
-    screen = pygame.display.set_mode(size)
+    pygame.init()
     pygame.display.set_caption("Kunkka's Plunder")
+    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     tiles.load()
     main()
