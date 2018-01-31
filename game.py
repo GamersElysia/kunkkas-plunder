@@ -6,6 +6,8 @@ import pygame
 from ecs import World, Entity
 from components import Drawable, Position, Grid
 from processors import FogOfWar, KeyboardMovement
+import tiles
+import hud
 import colors
 from config import *
 
@@ -120,8 +122,5 @@ if __name__ == '__main__':
     size = WINDOW_WIDTH, WINDOW_HEIGHT
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption("Kunkka's Plunder")
-    # These need to be imported after the game window is created.
-    import tiles
-    import hud
-
+    tiles.load()
     main()

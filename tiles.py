@@ -1,56 +1,71 @@
+from collections import namedtuple
+import sys
+
 import spritesheet
-import config as cfg
+from config import TILE_SIZE, TILE_COLUMNS, TILE_ROWS
 
 
-tiles = spritesheet.load('tiles.png').load_grid((cfg.TILE_SIZE, cfg.TILE_SIZE), cfg.TILE_COLUMNS, cfg.TILE_ROWS)
+TileCoord = namedtuple('TileCoord', ['x', 'y'])
 
-ocean = tiles[0][0]
-fog = tiles[0][1]
 
-island_visited = tiles[0][2]
-island_unvisited = tiles[0][3]
+def load():
+    module = sys.modules[__name__]
+    members = dir(module)
+    tile_spritesheet = spritesheet.load('tiles.png').load_grid(
+        (TILE_SIZE, TILE_SIZE), TILE_COLUMNS, TILE_ROWS)
+    for identifier in members:
+        value = getattr(module, identifier)
+        if type(value) is TileCoord:
+            setattr(module, identifier, tile_spritesheet[value.y][value.x])
 
-weapon_sword_up = tiles[1][0]
-weapon_sword_down = tiles[1][1]
-weapon_cannon_up = tiles[1][2]
-weapon_cannon_down = tiles[1][3]
-weapon_axe_up = tiles[2][0]
-weapon_axe_down = tiles[2][1]
-weapon_arrows_up = tiles[2][2]
-weapon_arrows_down = tiles[2][3]
-weapon_harpoon_up = tiles[3][0]
-weapon_harpoon_down = tiles[3][1]
-weapon_daggers_up = tiles[3][2]
-weapon_daggers_down = tiles[3][3]
 
-treasure_emerald = tiles[4][0]
-treasure_gold_sword = tiles[4][1]
-treasure_gold_sceptre = tiles[4][2]
-treasure_pearl = tiles[4][3]
-treasure_crown = tiles[5][0]
-treasure_ruby_ring = tiles[5][1]
-treasure_silver_chalice = tiles[5][2]
-treasure_chest = tiles[5][3]
-treasure_necklace = tiles[6][0]
-treasure_map = tiles[6][1]
+ocean = TileCoord(0, 0)
+fog = TileCoord(1, 0)
 
-sextant = tiles[6][2]
-spyglass = tiles[6][3]
-tar = tiles[7][0]
-iceberg = tiles[7][1]
-whirlpool = tiles[7][2]
+island_visited = TileCoord(2, 0)
+island_unvisited = TileCoord(3, 0)
 
-enemy_pirate_ship = tiles[7][3]
-enemy_ghost_ship = tiles[8][0]
-enemy_kraken = tiles[8][1]
-enemy_phoenix = tiles[8][2]
-enemy_siren = tiles[8][3]
+weapon_sword_up = TileCoord(0, 1)
+weapon_sword_down = TileCoord(1, 1)
+weapon_cannon_up = TileCoord(2, 1)
+weapon_cannon_down = TileCoord(3, 1)
+weapon_axe_up = TileCoord(0, 2)
+weapon_axe_down = TileCoord(1, 2)
+weapon_arrows_up = TileCoord(2, 2)
+weapon_arrows_down = TileCoord(3, 2)
+weapon_harpoon_up = TileCoord(0, 3)
+weapon_harpoon_down = TileCoord(1, 3)
+weapon_daggers_up = TileCoord(2, 3)
+weapon_daggers_down = TileCoord(3, 3)
 
-player_alive = tiles[9][0]
-player_dead = tiles[9][1]
+treasure_emerald = TileCoord(0, 4)
+treasure_gold_sword = TileCoord(1, 4)
+treasure_gold_sceptre = TileCoord(2, 4)
+treasure_pearl = TileCoord(3, 4)
+treasure_crown = TileCoord(0, 5)
+treasure_ruby_ring = TileCoord(1, 5)
+treasure_silver_chalice = TileCoord(2, 5)
+treasure_chest = TileCoord(3, 5)
+treasure_necklace = TileCoord(0, 6)
+treasure_map = TileCoord(1, 6)
 
-treasure_onyx_cross = tiles[9][2]
-treasure_empty = tiles[9][3]
+sextant = TileCoord(2, 6)
+spyglass = TileCoord(3, 6)
+tar = TileCoord(0, 7)
+iceberg = TileCoord(1, 7)
+whirlpool = TileCoord(2, 7)
 
-shown_enemy = tiles[10][0]
-shown_treasure = tiles[10][1]
+enemy_pirate_ship = TileCoord(3, 7)
+enemy_ghost_ship = TileCoord(0, 8)
+enemy_kraken = TileCoord(1, 8)
+enemy_phoenix = TileCoord(2, 8)
+enemy_siren = TileCoord(3, 8)
+
+player_alive = TileCoord(0, 9)
+player_dead = TileCoord(1, 9)
+
+treasure_onyx_cross = TileCoord(2, 9)
+treasure_empty = TileCoord(3, 9)
+
+shown_enemy = TileCoord(0, 10)
+shown_treasure = TileCoord(1, 10)
