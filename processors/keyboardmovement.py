@@ -31,3 +31,7 @@ class KeyboardMovement(Processor):
         for event in self.get_data('events'):
             if event.type == pygame.KEYDOWN:
                 self.move_entity(event)
+                # Don't process more than one movement command per update,
+                # otherwise the player may skip tiles by pressing two+ keys
+                # simultaneously.
+                break
