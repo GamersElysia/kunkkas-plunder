@@ -1,7 +1,12 @@
+import os
+
 import pygame
 
 from game import *
 from config import *
+
+
+os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 
 # Need to get rid of this.
