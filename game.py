@@ -35,19 +35,11 @@ def draw_board(screen, world):
                 screen.blit(tiles.fog, (x * TILE_SIZE, y * TILE_SIZE))
 
 
-def update(world):
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            sys.exit()
-        # Dispatch events to interested processors
-        for processor in world.processors:
-            if hasattr(processor, '_event_handlers'):
-                if event.type in processor._event_handlers:
-                    for fn_name in processor._event_handlers[event.type]:
-                        getattr(processor, fn_name)(event)
-
-    for processor in world.processors:
-        processor.update()
+def update(world, **extra_data):
+    if pygame.event.peek(pygame.QUIT):
+        sys.exit()
+    extra_data['events'] = pygame.event.get()
+    world.update(**extra_data)
 
 
 def draw(screen, world):
@@ -119,8 +111,8 @@ def main():
 
 
 if __name__ == '__main__':
-    size = WINDOW_WIDTH, WINDOW_HEIGHT
-    screen = pygame.display.set_mode(size)
+    pygame.init()
     pygame.display.set_caption("Kunkka's Plunder")
+    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     tiles.load()
     main()

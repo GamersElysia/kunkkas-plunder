@@ -10,11 +10,8 @@ class KeyboardMovement(Processor):
     def __init__(self, entity):
         super().__init__()
         self.entity = entity
-        self._event_handlers = {
-            pygame.KEYDOWN: ['onkeydown']
-        }
 
-    def onkeydown(self, event):
+    def move_entity(self, event):
         pos = self.entity.get(Position)
         x, y = pos.x, pos.y
         if event.key in KEYS_UP:
@@ -29,3 +26,12 @@ class KeyboardMovement(Processor):
         if within_bounds:
             pos.x = x
             pos.y = y
+
+    def update(self):
+        for event in self.get_data('events'):
+            if event.type == pygame.KEYDOWN:
+                self.move_entity(event)
+                # Don't process more than one movement command per update,
+                # otherwise the player may skip tiles by pressing two+ keys
+                # simultaneously.
+                break
