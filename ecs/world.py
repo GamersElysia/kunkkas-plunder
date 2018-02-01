@@ -21,6 +21,11 @@ class World:
         processor.world = self
         self.processors.append(processor)
 
+    def update(self, **data):
+        self.data = data
+        for processor in self.processors:
+            processor.update()
+
     def get(self, **kwargs):
         if 'name' in kwargs:
             name = kwargs['name']
