@@ -61,7 +61,7 @@ def create_world():
     board.add(Grid(GRID_COLUMNS, GRID_ROWS))
 
     add_things(world)
-
+    add_treasures(world)
     player = world.create_entity(name='Player')
     player.add(Position(GRID_COLUMNS // 2, GRID_ROWS // 2))
     player.add(Grid(GRID_COLUMNS, GRID_ROWS, 0)) # Represents vision/fog.
@@ -72,11 +72,16 @@ def create_world():
     return world
 
 
-def add_things(world):
-    thing_tiles = [
-        tiles.island_visited,
-        tiles.island_unvisited,
+def add_entity_to_world(world, tile):
+    entity = world.create_entity()
+    x = random.randrange(0, GRID_COLUMNS)
+    y = random.randrange(0, GRID_ROWS)
+    entity.add(Position(x, y))
+    entity.add(Drawable(tile))
 
+
+def add_treasures(world):
+    treasure_tiles = [
         tiles.treasure_emerald,
         tiles.treasure_gold_sword,
         tiles.treasure_gold_sceptre,
@@ -86,7 +91,16 @@ def add_things(world):
         tiles.treasure_silver_chalice,
         tiles.treasure_chest,
         tiles.treasure_necklace,
-        tiles.treasure_map,
+        tiles.treasure_map
+    ]
+    for i in range(NUMBER_OF_TREASURES):
+        add_entity_to_world(world, treasure_tiles[i])
+
+
+def add_things(world):
+    thing_tiles = [
+        tiles.island_visited,
+        tiles.island_unvisited,
 
         tiles.sextant,
         tiles.spyglass,
@@ -100,12 +114,9 @@ def add_things(world):
         tiles.enemy_phoenix,
         tiles.enemy_siren,
     ]
-    for i in range(NUMBER_OF_THINGS):
-        thing = world.create_entity()
-        x = random.randrange(0, GRID_COLUMNS)
-        y = random.randrange(0, GRID_ROWS)
-        thing.add(Position(x, y))
-        thing.add(Drawable(random.choice(thing_tiles)))
+    for i in range(0, 7):
+        for j in range(0, len(thing_tiles)):
+            add_entity_to_world(world, thing_tiles[j])
 
 
 def main():
