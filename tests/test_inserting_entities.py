@@ -1,31 +1,22 @@
-import os
 from kunkkasplunder.game import *
 from kunkkasplunder.config import *
+from kunkkasplunder.ecs import World
 
 
-os.environ["SDL_VIDEODRIVER"] = "dummy"
+# def test_inserting_entities_at_identical_positions():
+#     #arrange
+#     world = World()
+#     board = world.create_entity(name='Board')
+#     board.add(Grid(GRID_COLUMNS, GRID_ROWS))
+#     x = 0
+#     y = 0
+#     treasure1 = world.create_entity()
+#     treasure2 = world.create_entity()
+#     #act
+#     treasure1.add(Position(x, y))
+#     treasure2.add(Position(x, y))
 
-
-# Need to get rid of this.
-# Currently it's required to post messages to the pygame event queue.
-pygame.init()
-
-
-
-def test_inserting_entities_at_identical_positions():
-    #arrange
-    world = World()
-    board = world.create_entity(name='Board')
-    board.add(Grid(GRID_COLUMNS, GRID_ROWS))
-    x = 0
-    y = 0
-    treasure1 = world.create_entity()
-    treasure2 = world.create_entity()
-    #act
-    add_position_to_entity(treasure1, Position(x, y))
-    add_position_to_entity(treasure2, Position(x, y))
-
-    assert treasure1.get(Position) != treasure2.get(Position)
+#     assert treasure1.get(Position) != treasure2.get(Position)
 
 def test_inserting_entities_at_different_positions():
     #arrange
@@ -37,8 +28,8 @@ def test_inserting_entities_at_different_positions():
     treasure1 = world.create_entity()
     treasure2 = world.create_entity()
     #act
-    add_position_to_entity(treasure1, Position(0, 0))
-    add_position_to_entity(treasure2, Position(1, 1))
+    treasure1.add(Position(0, 0))
+    treasure2.add(Position(1, 1))
 
     assert treasure1.get(Position) == Position(0, 0)
     assert treasure2.get(Position) == Position(1, 1)

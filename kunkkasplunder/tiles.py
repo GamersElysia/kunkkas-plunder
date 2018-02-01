@@ -71,3 +71,39 @@ treasure_empty = TileCoord(3, 9)
 
 shown_enemy = TileCoord(0, 10)
 shown_treasure = TileCoord(1, 10)
+
+def treasures():
+    return [
+        treasure_emerald,
+        treasure_gold_sword,
+        treasure_gold_sceptre,
+        treasure_pearl,
+        treasure_crown,
+        treasure_ruby_ring,
+        treasure_silver_chalice,
+        treasure_chest,
+        treasure_necklace,
+        treasure_map,
+    ]
+
+def enemies():
+    return [
+        enemy_pirate_ship,
+        enemy_ghost_ship,
+        enemy_kraken,
+        enemy_phoenix,
+        enemy_siren,
+    ]
+
+def tools():
+    return [
+        sextant,
+        spyglass,
+        tar,
+    ]
+
+def hazards():
+    return [
+        iceberg,
+        whirlpool,
+    ]
