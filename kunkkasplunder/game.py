@@ -61,7 +61,7 @@ def create_world():
     player.add(Grid(GRID_COLUMNS, GRID_ROWS, 0)) # Represents vision/fog.
     player.add(Drawable(tiles.player_alive))
     world.add_processor(KeyboardMovement(player))
-    world.add_processor(FogOfWar(player, radius=1))
+    world.add_processor(FogOfWar(player, radius=0))
 
     return world
 
@@ -111,7 +111,6 @@ def add_things(world):
     for i in range(0, 7):
         for j in range(0, len(thing_tiles)):
             add_entity_to_world(world, thing_tiles[j])
-
 
 
 def init():
