@@ -11,6 +11,7 @@ from . import hud
 from . import colors
 from .config import *
 
+placed_entities = []
 
 def draw_board(screen, world):
     board = world.get(name='Board')[0]
@@ -76,12 +77,22 @@ def create_world():
     return world
 
 
-def add_entity_to_world(world, tile):
-    entity = world.create_entity()
+def generate_new_position():
     x = random.randrange(0, GRID_COLUMNS)
     y = random.randrange(0, GRID_ROWS)
-    entity.add(Position(x, y))
+    return Position(x, y)
+
+
+def create_new_entity(tile):
+    entity = world.create_entity()
     entity.add(Drawable(tile))
+
+
+def add_entity_to_world(world, entity, position):
+    while position in placed_entities:
+        position = generate_new_position()
+    entity.add(position)
+
 
 
 def add_treasures(world):
@@ -98,7 +109,8 @@ def add_treasures(world):
         tiles.treasure_map
     ]
     for i in range(NUMBER_OF_TREASURES):
-        add_entity_to_world(world, treasure_tiles[i])
+
+        add_entity_to_world(world, create_new_entity(treasure_tiles[i]), generate_new_position())
 
 
 def add_things(world):
@@ -120,7 +132,7 @@ def add_things(world):
     ]
     for i in range(0, 7):
         for j in range(0, len(thing_tiles)):
-            add_entity_to_world(world, thing_tiles[j])
+            add_entity_to_world(world, create_new_entity(thing_tiles[j]), generate_new_position())
 
 
 def init():
