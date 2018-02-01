@@ -18,6 +18,7 @@ from kunkkasplunder.ecs import World
 
 #     assert treasure1.get(Position) != treasure2.get(Position)
 
+
 def test_inserting_entities_at_different_positions():
     #arrange
     print(len(positions_in_use))

@@ -9,8 +9,6 @@ from . import tiles
 from . import hud
 from .config import *
 
-positions_in_use = []
-
 def draw_board(screen, world):
     board = world.get(name='Board')[0]
     grid = board.get(Grid)
