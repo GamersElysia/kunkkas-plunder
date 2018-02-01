@@ -41,10 +41,20 @@ def update(world, **extra_data):
     extra_data['events'] = pygame.event.get()
     world.update(**extra_data)
 
-
-def draw(screen, world):
+# TODO: Remove global variable.
+font = None
+def draw(clock, world, screen):
     hud.draw_base_hud(screen)
     draw_board(screen, world)
+
+    # render text
+    global font
+    if font is None:
+        font = pygame.font.Font(None, 24)
+    else:
+        label = font.render('FPS: %d' % round(clock.get_fps()), 1, (0, 255, 0))
+        screen.blit(label, (screen.get_width() - label.get_width() - 10, 10))
+
     pygame.display.flip()
 
 
@@ -125,11 +135,12 @@ def init():
 def run():
     screen = init()
     world = create_world()
+    clock = pygame.time.Clock()
     while True:
         # Handle resize events where we access the screen variable.
         for resize_event in pygame.event.get(pygame.VIDEORESIZE):
             screen = pygame.display.set_mode(
                 (resize_event.w, resize_event.h), pygame.RESIZABLE)
         update(world)
-        draw(screen, world)
-        pygame.time.wait(50)
+        draw(clock, world, screen)
+        clock.tick(20)
