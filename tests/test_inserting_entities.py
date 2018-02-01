@@ -1,6 +1,6 @@
 import os
-from game import *
-from config import *
+from kunkkasplunder.game import *
+from kunkkasplunder.config import *
 
 
 os.environ["SDL_VIDEODRIVER"] = "dummy"
@@ -22,13 +22,14 @@ def test_inserting_entities_at_identical_positions():
     treasure1 = world.create_entity()
     treasure2 = world.create_entity()
     #act
-    add_entity_to_world(world, treasure1, Position(x, y))
-    add_entity_to_world(world, treasure2, Position(x, y))
+    add_position_to_entity(treasure1, Position(x, y))
+    add_position_to_entity(treasure2, Position(x, y))
 
     assert treasure1.get(Position) != treasure2.get(Position)
 
 def test_inserting_entities_at_different_positions():
     #arrange
+    print(len(positions_in_use))
     world = World()
     board = world.create_entity(name='Board')
     board.add(Grid(GRID_COLUMNS, GRID_ROWS))
@@ -36,8 +37,8 @@ def test_inserting_entities_at_different_positions():
     treasure1 = world.create_entity()
     treasure2 = world.create_entity()
     #act
-    add_entity_to_world(world, treasure1, Position(0, 0))
-    add_entity_to_world(world, treasure2, Position(1, 1))
+    add_position_to_entity(treasure1, Position(0, 0))
+    add_position_to_entity(treasure2, Position(1, 1))
 
     assert treasure1.get(Position) == Position(0, 0)
     assert treasure2.get(Position) == Position(1, 1)
