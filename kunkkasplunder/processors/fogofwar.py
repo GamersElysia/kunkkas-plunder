@@ -1,8 +1,8 @@
 import pygame
 
-from components import Grid, Position
-from config import *
-from ecs import Processor
+from kunkkasplunder.components import Grid, Position
+from kunkkasplunder.config import *
+from kunkkasplunder.ecs import Processor
 
 
 class FogOfWar(Processor):

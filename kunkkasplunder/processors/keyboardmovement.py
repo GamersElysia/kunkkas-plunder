@@ -1,8 +1,8 @@
 import pygame
 
-from components import Position
-from config import *
-from ecs import Processor
+from kunkkasplunder.components import Position
+from kunkkasplunder.config import *
+from kunkkasplunder.ecs import Processor
 
 
 class KeyboardMovement(Processor):

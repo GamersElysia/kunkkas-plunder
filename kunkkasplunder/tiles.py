@@ -1,8 +1,9 @@
 from collections import namedtuple
+import os
 import sys
 
-import spritesheet
-from config import TILE_SIZE, TILE_COLUMNS, TILE_ROWS
+from . import spritesheet
+from .config import TILE_SIZE, TILE_COLUMNS, TILE_ROWS
 
 
 TileCoord = namedtuple('TileCoord', ['x', 'y'])
@@ -11,7 +12,8 @@ TileCoord = namedtuple('TileCoord', ['x', 'y'])
 def load():
     module = sys.modules[__name__]
     members = dir(module)
-    tile_spritesheet = spritesheet.load('tiles.png').load_grid(
+    image_path = os.path.join(os.path.dirname(__file__), 'tiles.png')
+    tile_spritesheet = spritesheet.load(image_path).load_grid(
         (TILE_SIZE, TILE_SIZE), TILE_COLUMNS, TILE_ROWS)
     for identifier in members:
         value = getattr(module, identifier)
