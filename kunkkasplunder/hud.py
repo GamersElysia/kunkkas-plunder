@@ -1,8 +1,8 @@
 import pygame
 
-import colors
-from config import *
-import tiles
+from . import colors
+from .config import *
+from . import tiles
 
 
 def calc_play_area_base_rectangle(rect):

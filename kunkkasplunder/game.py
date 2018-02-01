@@ -3,13 +3,13 @@ import sys
 
 import pygame
 
-from ecs import World, Entity
-from components import Drawable, Position, Grid
-from processors import FogOfWar, KeyboardMovement
-import tiles
-import hud
-import colors
-from config import *
+from .ecs import World, Entity
+from .components import Drawable, Position, Grid
+from .processors import FogOfWar, KeyboardMovement
+from . import tiles
+from . import hud
+from . import colors
+from .config import *
 
 
 def draw_board(screen, world):
@@ -38,9 +38,6 @@ def draw_board(screen, world):
 def update(world, **extra_data):
     if pygame.event.peek(pygame.QUIT):
         sys.exit()
-    for resize_event in pygame.event.get(pygame.VIDEORESIZE):
-        screen = pygame.display.set_mode(
-            (resize_event.w, resize_event.h), pygame.RESIZABLE)
     extra_data['events'] = pygame.event.get()
     world.update(**extra_data)
 
@@ -105,18 +102,24 @@ def add_things(world):
         thing.add(Drawable(random.choice(thing_tiles)))
 
 
-def main():
-    world = create_world()
-    while True:
-        update(world)
-        draw(screen, world)
-        pygame.time.wait(50)
 
-
-if __name__ == '__main__':
+def init():
     pygame.init()
     pygame.display.set_caption("Kunkka's Plunder")
     screen = pygame.display.set_mode(
         (WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
     tiles.load()
-    main()
+    return screen
+
+
+def run():
+    screen = init()
+    world = create_world()
+    while True:
+        # Handle resize events where we access the screen variable.
+        for resize_event in pygame.event.get(pygame.VIDEORESIZE):
+            screen = pygame.display.set_mode(
+                (resize_event.w, resize_event.h), pygame.RESIZABLE)
+        update(world)
+        draw(screen, world)
+        pygame.time.wait(50)

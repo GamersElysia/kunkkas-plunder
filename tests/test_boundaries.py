@@ -2,8 +2,8 @@ import os
 
 import pygame
 
-from game import *
-from config import *
+from kunkkasplunder.game import *
+from kunkkasplunder.config import *
 
 
 os.environ["SDL_VIDEODRIVER"] = "dummy"
