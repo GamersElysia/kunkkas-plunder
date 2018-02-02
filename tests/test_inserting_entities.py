@@ -1,3 +1,5 @@
+import pytest
+
 from kunkkasplunder.game import *
 from kunkkasplunder.config import *
 from kunkkasplunder.ecs import World
