@@ -52,7 +52,8 @@ def test_adding_too_many_entities_to_world():
 def test_correct_number_of_entities():
     world = worldgen.create_world()
 
-    total_should_be = (1 +  # Player
+    total_should_be = (
+        1 +  # Player
         NUMBER_OF_TREASURES +
         NUMBER_OF_ENEMIES +
         NUMBER_OF_HAZARDS +

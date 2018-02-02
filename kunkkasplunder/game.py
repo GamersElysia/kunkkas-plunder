@@ -9,6 +9,7 @@ from . import tiles
 from . import hud
 from .config import *
 
+
 def draw_board(screen, world):
     board = world.get(name='Board')[0]
     grid = board.get(Grid)
@@ -36,7 +37,7 @@ def update(world, **extra_data):
     extra_data['events'] = pygame.event.get()
     for event in extra_data['events']:
         if (event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and
-                                           event.key == pygame.K_q)):
+                                          event.key == pygame.K_q)):
             sys.exit()
     world.update(**extra_data)
 
