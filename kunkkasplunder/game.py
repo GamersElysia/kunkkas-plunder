@@ -7,30 +7,58 @@ from .components import Drawable, Position, Grid
 from . import worldgen
 from . import tiles
 from . import hud
+from . import colors
 from .config import *
 
 
-def draw_board(screen, world):
+class DirtyTileTracker:
+
+    def __init__(self):
+        self.reset()
+
+    def all_dirty(self):
+        self.all = True
+
+    def add(self, tile_position):
+        self.dirty.append(tile_position)
+
+    def reset(self):
+        self.dirty = []
+        self.all = False
+
+    def get_dirty_tiles(self):
+        if self.all:
+            return True
+        return self.dirty
+
+
+def draw_board(screen, world, dirty_tiles):
     board = world.get(name='Board')[0]
     grid = board.get(Grid)
 
     player = world.get(name='Player')[0]
     player_position = player.get(Position)
-    fog = player.get(Grid)
+    fog_grid = player.get(Grid)
+
+    tile_grid = map(lambda: [tiles.fog] * grid.width, range(grid.height))
+
+    entity_position_map = {}
+    entity_position_map[player_position] = player
+    for entity in world.get(has=[Drawable, Position]):
+        entity_position_map[entity.get(Position)] = entity
 
     for y in range(grid.height):
         for x in range(grid.width):
-            screen.blit(tiles.ocean, (x * TILE_SIZE, y * TILE_SIZE))
-
-    for thing in world.get(has=[Drawable, Position]):
-        pos = thing.get(Position)
-        surface = thing.get(Drawable).surface
-        screen.blit(surface, (pos.x * TILE_SIZE, pos.y * TILE_SIZE))
-
-    for y in range(grid.height):
-        for x in range(grid.width):
-            if fog[x, y] == 0:
+            if dirty_tiles is not True and (x, y) not in dirty_tiles:
+                continue
+            if fog_grid[x, y] == 0:
                 screen.blit(tiles.fog, (x * TILE_SIZE, y * TILE_SIZE))
+            elif Position(x, y) in entity_position_map:
+                entity = entity_position_map[Position(x, y)]
+                surface = entity.get(Drawable).surface
+                screen.blit(surface, (x * TILE_SIZE, y * TILE_SIZE))
+            else:
+                screen.blit(tiles.ocean, (x * TILE_SIZE, y * TILE_SIZE))
 
 
 def update(world, **extra_data):
@@ -44,9 +72,9 @@ def update(world, **extra_data):
 
 # TODO: Remove global variable.
 font = None
-def draw(clock, world, screen):
+def draw(clock, world, screen, dirty_tiles):
     hud.draw_base_hud(screen)
-    draw_board(screen, world)
+    draw_board(screen, world, dirty_tiles)
 
     # render text
     global font
@@ -59,7 +87,7 @@ def draw(clock, world, screen):
         pygame.draw.rect(screen, colors.HUD_GREY, label_rect)
         screen.blit(label, label_topleft)
 
-    pygame.display.flip()
+    pygame.display.update()
 
 
 def init():
@@ -74,12 +102,21 @@ def init():
 def run():
     screen = init()
     world = worldgen.create_world()
+
+    dtt = DirtyTileTracker()
+    dtt.all_dirty()
+    for processor in world.processors:
+        if hasattr(processor, 'dirty_tile_tracker'):
+            processor.dirty_tile_tracker = dtt
+
     clock = pygame.time.Clock()
     while True:
         # Handle resize events where we access the screen variable.
         for resize_event in pygame.event.get(pygame.VIDEORESIZE):
             screen = pygame.display.set_mode(
                 (resize_event.w, resize_event.h), pygame.RESIZABLE)
+            dtt.all_dirty()
         update(world)
-        draw(clock, world, screen)
-        clock.tick(20)
+        draw(clock, world, screen, dtt.get_dirty_tiles())
+        dtt.reset()
+        clock.tick()

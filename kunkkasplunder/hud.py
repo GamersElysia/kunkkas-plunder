@@ -6,20 +6,17 @@ from . import tiles
 
 
 def calc_play_area_base_rectangle(rect):
-    return (0, 0, rect.width * 0.8, rect.height * 0.8)
+    return pygame.Rect(0, 0, GRID_COLUMNS * TILE_SIZE, GRID_ROWS * TILE_SIZE)
 
 
 def calc_sidebar_base_rectangle(rect):
-    return (rect.width * 0.8, 0, rect.width * 0.2, rect.height)
+    play_area = calc_play_area_base_rectangle(rect)
+    return pygame.Rect(play_area.width, 0, rect.width - play_area.width, rect.height)
 
 
 def calc_inventory_base_rectangle(rect):
-    return (0, rect.height * 0.83, rect.width, rect.height * 0.2)
-
-
-def draw_base_play_area(screen):
-    rect = calc_play_area_base_rectangle(screen.get_rect())
-    pygame.draw.rect(screen, colors.OCEAN_BLUE, rect)
+    play_area = calc_play_area_base_rectangle(rect)
+    return pygame.Rect(0, play_area.height, rect.width, rect.height - play_area.height)
 
 
 def draw_base_sidebar(screen):
@@ -33,8 +30,7 @@ def draw_inventory_treasures(screen):
     for i in range(0, NUMBER_OF_TREASURES):
         screen.blit(
             tiles.treasure_empty,
-            ((2 * i + 1) * padding + i * TILE_SIZE,
-            screen.get_height() * 0.95))
+            ((2 * i + 1) * padding + i * TILE_SIZE, screen.get_height() * 0.95))
 
 
 def draw_base_inventory(screen):
@@ -44,6 +40,5 @@ def draw_base_inventory(screen):
 
 
 def draw_base_hud(screen):
-    draw_base_play_area(screen)
     draw_base_sidebar(screen)
     draw_base_inventory(screen)

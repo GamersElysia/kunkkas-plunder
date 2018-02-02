@@ -10,6 +10,7 @@ class KeyboardMovement(Processor):
     def __init__(self, entity):
         super().__init__()
         self.entity = entity
+        self.dirty_tile_tracker = None
 
     def move_entity(self, event):
         pos = self.entity.get(Position)
@@ -22,10 +23,14 @@ class KeyboardMovement(Processor):
             x -= 1
         if event.key in KEYS_RIGHT:
             x += 1
-        within_bounds = 0 <= x < GRID_COLUMNS and 0 <= y < GRID_ROWS
-        if within_bounds:
-            pos.x = x
-            pos.y = y
+        if x != pos.x or y != pos.y:
+            within_bounds = 0 <= x < GRID_COLUMNS and 0 <= y < GRID_ROWS
+            if within_bounds:
+                if self.dirty_tile_tracker:
+                    self.dirty_tile_tracker.add((x, y))
+                    self.dirty_tile_tracker.add((pos.x, pos.y))
+                pos.x = x
+                pos.y = y
 
     def update(self):
         for event in self.get_data('events'):
