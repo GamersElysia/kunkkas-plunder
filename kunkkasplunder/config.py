@@ -1,8 +1,8 @@
 from pygame.locals import *
 
 
-WINDOW_WIDTH = 960
-WINDOW_HEIGHT = 720
+WINDOW_WIDTH = 720
+WINDOW_HEIGHT = 450
 
 TILE_SIZE = 32
 TILE_ROWS = 11
