@@ -25,12 +25,13 @@ def draw_base_sidebar(screen):
 
 
 def draw_inventory_treasures(screen):
-    space = screen.get_width() - (NUMBER_OF_TREASURES * TILE_SIZE)
-    padding = space / (2 * NUMBER_OF_TREASURES)
+    inventory_area = calc_inventory_base_rectangle(screen.get_rect())
+    whitespace = inventory_area.width - NUMBER_OF_TREASURES * TILE_SIZE
+    padding = whitespace / (NUMBER_OF_TREASURES + 1)
+    y = inventory_area.y + inventory_area.height / 2 - TILE_SIZE / 2
     for i in range(0, NUMBER_OF_TREASURES):
-        screen.blit(
-            tiles.treasure_empty,
-            ((2 * i + 1) * padding + i * TILE_SIZE, screen.get_height() * 0.95))
+        x = inventory_area.x + padding * (i + 1) + TILE_SIZE * i
+        screen.blit(tiles.treasure_empty, (x, y))
 
 
 def draw_base_inventory(screen):
