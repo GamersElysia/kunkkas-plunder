@@ -113,8 +113,14 @@ def run():
     while True:
         # Handle resize events where we access the screen variable.
         for resize_event in pygame.event.get(pygame.VIDEORESIZE):
+            new_width = resize_event.w
+            new_height = resize_event.h
+            if resize_event.w < WINDOW_WIDTH:
+                new_width = WINDOW_WIDTH
+            if resize_event.h < WINDOW_HEIGHT:
+                new_height = WINDOW_HEIGHT
             screen = pygame.display.set_mode(
-                (resize_event.w, resize_event.h), pygame.RESIZABLE)
+                (new_width, new_height), pygame.RESIZABLE)
             dtt.all_dirty()
         update(world)
         draw(clock, world, screen, dtt.get_dirty_tiles())
