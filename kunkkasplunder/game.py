@@ -54,7 +54,10 @@ def draw(clock, world, screen):
         font = pygame.font.Font(None, 24)
     else:
         label = font.render('FPS: %d' % round(clock.get_fps()), 1, (0, 255, 0))
-        screen.blit(label, (screen.get_width() - label.get_width() - 10, 10))
+        label_topleft = (screen.get_width() - max(label.get_width(), 75) - 10, 10)
+        label_rect = pygame.Rect(label_topleft, label.get_size())
+        pygame.draw.rect(screen, colors.HUD_GREY, label_rect)
+        screen.blit(label, label_topleft)
 
     pygame.display.flip()
 
