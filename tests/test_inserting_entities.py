@@ -1,5 +1,3 @@
-import pytest
-
 from kunkkasplunder.game import *
 from kunkkasplunder.config import *
 from kunkkasplunder.ecs import World
@@ -47,3 +45,18 @@ def test_adding_too_many_entities_to_world():
                 world, None, inhabited_positions)
             inhabited_positions.append(pos)
     assert 'Unable to place entity' in str(err_info.value)
+
+
+def test_correct_number_of_entities():
+    world = worldgen.create_world()
+
+    total_should_be = (1 +  # Player
+        NUMBER_OF_TREASURES +
+        NUMBER_OF_ENEMIES +
+        NUMBER_OF_HAZARDS +
+        NUMBER_OF_ISLANDS +
+        NUMBER_OF_TOOLS)
+
+    total = len(world.get(has=[Drawable, Position]))
+
+    assert total_should_be == total
