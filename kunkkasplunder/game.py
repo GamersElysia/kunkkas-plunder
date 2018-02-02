@@ -33,10 +33,13 @@ def draw_board(screen, world):
 
 
 def update(world, **extra_data):
-    if pygame.event.peek(pygame.QUIT):
-        sys.exit()
     extra_data['events'] = pygame.event.get()
+    for event in extra_data['events']:
+        if (event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and
+                                           event.key == pygame.K_q)):
+            sys.exit()
     world.update(**extra_data)
+
 
 # TODO: Remove global variable.
 font = None
