@@ -86,6 +86,7 @@ def generate_new_position():
 def create_new_entity(world, tile):
     entity = world.create_entity()
     entity.add(Drawable(tile))
+    return entity
 
 
 def add_position_to_entity(entity, position):
@@ -109,7 +110,6 @@ def add_treasures(world):
         tiles.treasure_map
     ]
     for i in range(NUMBER_OF_TREASURES):
-
         add_position_to_entity(create_new_entity(world, treasure_tiles[i]), generate_new_position())
 
 

@@ -1,7 +1,4 @@
 import os
-
-import pygame
-
 from kunkkasplunder.game import *
 from kunkkasplunder.config import *
 

@@ -1,12 +1,20 @@
 [[source]]
+
 url = "https://pypi.python.org/simple"
 verify_ssl = true
+
+
 [requires]
+
 python_version = "3.6"
+
+
 [packages]
+
 pygame = "*"
+pytest = "*"
 
 
 [dev-packages]
-pytest = "*"
 
+pytest = "*"

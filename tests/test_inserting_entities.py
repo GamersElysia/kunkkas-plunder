@@ -14,7 +14,7 @@ pygame.init()
 
 def test_inserting_entities_at_identical_positions():
     #arrange
-    world = World()
+    world = create_world()
     board = world.create_entity(name='Board')
     board.add(Grid(GRID_COLUMNS, GRID_ROWS))
     x = 0
@@ -30,7 +30,7 @@ def test_inserting_entities_at_identical_positions():
 def test_inserting_entities_at_different_positions():
     #arrange
     print(len(positions_in_use))
-    world = World()
+    world = create_world()
     board = world.create_entity(name='Board')
     board.add(Grid(GRID_COLUMNS, GRID_ROWS))
 

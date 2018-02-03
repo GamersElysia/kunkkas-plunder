@@ -12,3 +12,4 @@ class Position:
             return True
         else:
             return False
+
