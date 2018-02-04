@@ -47,6 +47,7 @@ def test_adding_too_many_entities_to_world():
                 world, None, inhabited_positions)
             inhabited_positions.append(pos)
     assert 'Unable to place entity' in str(err_info.value)
+    assert len(world.entities) == too_many - 1
 
 
 def test_correct_number_of_entities():
