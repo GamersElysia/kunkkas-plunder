@@ -39,6 +39,9 @@ def test_inserting_entities_at_different_positions():
 
 def test_adding_too_many_entities_to_world():
     world = World()
+    board = world.create_entity(name='Board')
+    board.add(Grid(GRID_COLUMNS, GRID_ROWS))
+
     too_many = GRID_COLUMNS * GRID_ROWS + 1
     inhabited_positions = []
     with pytest.raises(worldgen.Error) as err_info:
@@ -47,7 +50,7 @@ def test_adding_too_many_entities_to_world():
                 world, None, inhabited_positions)
             inhabited_positions.append(pos)
     assert 'Unable to place entity' in str(err_info.value)
-    assert len(world.entities) == too_many - 1
+    assert len(world.get(has=[Position])) == too_many - 1
 
 
 def test_correct_number_of_entities():

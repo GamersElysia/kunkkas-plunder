@@ -54,7 +54,8 @@ def place_drawable_entity_randomly(world, surface, inhabited_positions=None):
     if inhabited_positions is None:
         inhabited_positions = []
 
-    if GRID_COLUMNS * GRID_ROWS <= len(inhabited_positions):
+    grid = world.get(name='Board')[0].get(Grid)
+    if grid.width * grid.height <= len(inhabited_positions):
         raise Error('Unable to place entity in world due to all tiles being inhabited')
 
     while True:
