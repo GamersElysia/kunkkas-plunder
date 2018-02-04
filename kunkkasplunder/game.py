@@ -3,50 +3,78 @@ import sys
 
 import pygame
 
-from .ecs import World, Entity
 from .components import Drawable, Position, Grid
-from .processors import FogOfWar, KeyboardMovement
+from . import worldgen
 from . import tiles
 from . import hud
 from . import colors
 from .config import *
 
-positions_in_use = []
 
-def draw_board(screen, world):
+class DirtyTileTracker:
+
+    def __init__(self):
+        self.reset()
+
+    def all_dirty(self):
+        self.all = True
+
+    def add(self, tile_position):
+        self.dirty.append(tile_position)
+
+    def reset(self):
+        self.dirty = []
+        self.all = False
+
+    def get_dirty_tiles(self):
+        if self.all:
+            return True
+        return self.dirty
+
+
+def draw_board(screen, world, dirty_tiles):
     board = world.get(name='Board')[0]
     grid = board.get(Grid)
 
     player = world.get(name='Player')[0]
     player_position = player.get(Position)
-    fog = player.get(Grid)
+    fog_grid = player.get(Grid)
+
+    tile_grid = map(lambda: [tiles.fog] * grid.width, range(grid.height))
+
+    entity_position_map = {}
+    entity_position_map[player_position] = player
+    for entity in world.get(has=[Drawable, Position]):
+        entity_position_map[entity.get(Position)] = entity
 
     for y in range(grid.height):
         for x in range(grid.width):
-            screen.blit(tiles.ocean, (x * TILE_SIZE, y * TILE_SIZE))
-
-    for thing in world.get(has=[Drawable, Position]):
-        pos = thing.get(Position)
-        surface = thing.get(Drawable).surface
-        screen.blit(surface, (pos.x * TILE_SIZE, pos.y * TILE_SIZE))
-
-    for y in range(grid.height):
-        for x in range(grid.width):
-            if fog[x, y] == 0:
+            if dirty_tiles is not True and (x, y) not in dirty_tiles:
+                continue
+            if fog_grid[x, y] == 0:
                 screen.blit(tiles.fog, (x * TILE_SIZE, y * TILE_SIZE))
+            elif Position(x, y) in entity_position_map:
+                entity = entity_position_map[Position(x, y)]
+                surface = entity.get(Drawable).surface
+                screen.blit(surface, (x * TILE_SIZE, y * TILE_SIZE))
+            else:
+                screen.blit(tiles.ocean, (x * TILE_SIZE, y * TILE_SIZE))
 
 
 def update(world, **extra_data):
-    if pygame.event.peek(pygame.QUIT):
-        sys.exit()
     extra_data['events'] = pygame.event.get()
+    for event in extra_data['events']:
+        if (event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and
+                                          event.key == pygame.K_q)):
+            sys.exit()
     world.update(**extra_data)
+
 
 # TODO: Remove global variable.
 font = None
-def draw(clock, world, screen):
+def draw(clock, world, screen, dirty_tiles):
     hud.draw_base_hud(screen)
-    draw_board(screen, world)
+    draw_board(screen, world, dirty_tiles)
 
     # render text
     global font
@@ -54,85 +82,12 @@ def draw(clock, world, screen):
         font = pygame.font.Font(None, 24)
     else:
         label = font.render('FPS: %d' % round(clock.get_fps()), 1, (0, 255, 0))
-        screen.blit(label, (screen.get_width() - label.get_width() - 10, 10))
+        label_topleft = (screen.get_width() - max(label.get_width(), 75) - 10, 10)
+        label_rect = pygame.Rect(label_topleft, label.get_size())
+        pygame.draw.rect(screen, colors.HUD_GREY, label_rect)
+        screen.blit(label, label_topleft)
 
-    pygame.display.flip()
-
-
-def create_world():
-    world = World()
-
-    board = world.create_entity(name='Board')
-    board.add(Grid(GRID_COLUMNS, GRID_ROWS))
-
-    add_things(world)
-    add_treasures(world)
-    player = world.create_entity(name='Player')
-    player.add(Position(GRID_COLUMNS // 2, GRID_ROWS // 2))
-    player.add(Grid(GRID_COLUMNS, GRID_ROWS, 0)) # Represents vision/fog.
-    player.add(Drawable(tiles.player_alive))
-    world.add_processor(KeyboardMovement(player))
-    world.add_processor(FogOfWar(player, radius=0))
-
-    return world
-
-
-def generate_new_position():
-    x = random.randrange(0, GRID_COLUMNS)
-    y = random.randrange(0, GRID_ROWS)
-    return Position(x, y)
-
-
-def create_new_entity(world, tile):
-    entity = world.create_entity()
-    entity.add(Drawable(tile))
-    return entity
-
-
-def add_position_to_entity(entity, position):
-    while position in positions_in_use:
-        position = generate_new_position()
-    entity.add(position)
-    positions_in_use.append(position)
-
-
-def add_treasures(world):
-    treasure_tiles = [
-        tiles.treasure_emerald,
-        tiles.treasure_gold_sword,
-        tiles.treasure_gold_sceptre,
-        tiles.treasure_pearl,
-        tiles.treasure_crown,
-        tiles.treasure_ruby_ring,
-        tiles.treasure_silver_chalice,
-        tiles.treasure_chest,
-        tiles.treasure_necklace,
-        tiles.treasure_map
-    ]
-    for i in range(NUMBER_OF_TREASURES):
-        add_position_to_entity(create_new_entity(world, treasure_tiles[i]), generate_new_position())
-
-
-def add_things(world):
-    thing_tiles = [
-        tiles.island_visited,
-        tiles.island_unvisited,
-
-        tiles.sextant,
-        tiles.spyglass,
-        tiles.tar,
-        tiles.iceberg,
-        tiles.whirlpool,
-
-        tiles.enemy_pirate_ship,
-        tiles.enemy_ghost_ship,
-        tiles.enemy_kraken,
-        tiles.enemy_phoenix,
-        tiles.enemy_siren,
-    ]
-    for i in range(0, 7):
-        for j in range(0, len(thing_tiles)):
-            add_position_to_entity(create_new_entity(world, thing_tiles[j]), generate_new_position())
+    pygame.display.update()
 
 
 def init():
@@ -146,13 +101,28 @@ def init():
 
 def run():
     screen = init()
-    world = create_world()
+    world = worldgen.create_world()
+
+    dtt = DirtyTileTracker()
+    dtt.all_dirty()
+    for processor in world.processors:
+        if hasattr(processor, 'dirty_tile_tracker'):
+            processor.dirty_tile_tracker = dtt
+
     clock = pygame.time.Clock()
     while True:
         # Handle resize events where we access the screen variable.
         for resize_event in pygame.event.get(pygame.VIDEORESIZE):
+            new_width = resize_event.w
+            new_height = resize_event.h
+            if resize_event.w < WINDOW_WIDTH:
+                new_width = WINDOW_WIDTH
+            if resize_event.h < WINDOW_HEIGHT:
+                new_height = WINDOW_HEIGHT
             screen = pygame.display.set_mode(
-                (resize_event.w, resize_event.h), pygame.RESIZABLE)
+                (new_width, new_height), pygame.RESIZABLE)
+            dtt.all_dirty()
         update(world)
-        draw(clock, world, screen)
-        clock.tick(20)
+        draw(clock, world, screen, dtt.get_dirty_tiles())
+        dtt.reset()
+        clock.tick()

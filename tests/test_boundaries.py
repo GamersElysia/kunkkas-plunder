@@ -1,18 +1,10 @@
-import os
 from kunkkasplunder.game import *
 from kunkkasplunder.config import *
-
-
-os.environ["SDL_VIDEODRIVER"] = "dummy"
-
-
-# Need to get rid of this.
-# Currently it's required to post messages to the pygame event queue.
-pygame.init()
+from kunkkasplunder import worldgen
 
 
 def move_player_many_times(key):
-    world = create_world()
+    world = worldgen.create_world()
     repeat = max(GRID_COLUMNS, GRID_ROWS) * 2
     for _ in range(repeat):
         event = pygame.event.Event(KEYDOWN, key=key)

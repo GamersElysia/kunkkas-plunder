@@ -1,3 +1,5 @@
+import itertools
+
 from . import Entity
 
 
@@ -38,9 +40,12 @@ class World:
         if 'has' in kwargs:
             for id in self.entities:
                 entity = self.entities[id]
+                add_entity = True
                 for component_type in kwargs['has']:
                     if not entity.has(component_type):
+                        add_entity = False
                         break
+                if add_entity:
                     result.append(entity)
 
         return result

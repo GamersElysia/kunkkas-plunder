@@ -11,6 +11,7 @@ class FogOfWar(Processor):
         super().__init__()
         self.entity = entity
         self.radius = radius
+        self.dirty_tile_tracker = None
 
     def update(self):
         pos = self.entity.get(Position)
@@ -21,4 +22,7 @@ class FogOfWar(Processor):
             if 0 <= x < fog.width:
                 for y in range(pos.y - radius, pos.y + radius + 1):
                     if 0 <= y < fog.height:
-                        fog[x, y] = 1
+                        if fog[x, y] != 1:
+                            fog[x, y] = 1
+                            if self.dirty_tile_tracker:
+                                self.dirty_tile_tracker.add((x, y))
