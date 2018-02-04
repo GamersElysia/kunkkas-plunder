@@ -82,7 +82,7 @@ def draw(clock, world, screen, dirty_tiles):
         font = pygame.font.Font(None, 24)
     else:
         label = font.render('FPS: %d' % round(clock.get_fps()), 1, (0, 255, 0))
-        label_topleft = (screen.get_width() - max(label.get_width(), 75) - 10, 10)
+        label_topleft = (screen.get_width() - max(label.get_width(), 80) - 10, 10)
         label_rect = pygame.Rect(label_topleft, label.get_size())
         pygame.draw.rect(screen, colors.HUD_GREY, label_rect)
         screen.blit(label, label_topleft)
