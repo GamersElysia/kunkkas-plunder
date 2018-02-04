@@ -33,10 +33,10 @@ class DirtyTileTracker:
 
 
 def draw_board(screen, world, dirty_tiles):
-    board = world.get(name='Board')[0]
+    board = world.get_name('Board')
     grid = board.get(Grid)
 
-    player = world.get(name='Player')[0]
+    player = world.get_name('Player')
     player_position = player.get(Position)
     fog_grid = player.get(Grid)
 

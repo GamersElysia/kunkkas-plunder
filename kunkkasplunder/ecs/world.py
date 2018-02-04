@@ -50,6 +50,9 @@ class World:
 
         return result
 
+    def get_name(self, name):
+        return self.name_map.get(name)
+
     def _set_name(self, entity, name):
         if entity.name in self.name_map:
             del self.name_map[name]

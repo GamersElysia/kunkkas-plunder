@@ -10,7 +10,7 @@ def move_player_many_times(key):
         event = pygame.event.Event(KEYDOWN, key=key)
         pygame.event.post(event)
         update(world)
-    return world.get(name="Player")[0].get(Position)
+    return world.get_name('Player').get(Position)
 
 
 def test_top_boundary():
