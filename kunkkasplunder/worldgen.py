@@ -12,13 +12,15 @@ def create_world():
     world = World()
 
     board = world.create_entity(name='Board')
-    board.add(Grid(GRID_COLUMNS, GRID_ROWS))
+    grid = Grid(GRID_COLUMNS, GRID_ROWS)
+    board.add(grid)
 
     player = world.create_entity(name='Player')
     player_pos = Position(GRID_COLUMNS // 2, GRID_ROWS // 2)
     player.add(player_pos)
     player.add(Grid(GRID_COLUMNS, GRID_ROWS, 0))  # Represents vision/fog.
     player.add(Drawable(tiles.player_alive))
+    grid[player_pos] = player
 
     add_things(world)
 
@@ -29,6 +31,7 @@ def create_world():
 
 
 def add_things(world):
+    # One of each treasure.
     entity_tiles_to_add = copy.copy(tiles.treasures())
 
     for _ in range(NUMBER_OF_ISLANDS):
@@ -43,31 +46,28 @@ def add_things(world):
     for _ in range(NUMBER_OF_ENEMIES):
         entity_tiles_to_add.append(random.choice(tiles.enemies()))
 
-    player = world.get(name='Player')[0]
-    inhabited = [player.get(Position)]
     for tile in entity_tiles_to_add:
-        pos = place_drawable_entity_randomly(world, tile, inhabited)
-        inhabited.append(pos)
+        pos = place_drawable_entity_randomly(world, tile)
 
 
-def place_drawable_entity_randomly(world, surface, inhabited_positions=None):
-    if inhabited_positions is None:
-        inhabited_positions = []
+def place_drawable_entity_randomly(world, surface):
+    grid = world.get_name('Board').get(Grid)
 
-    grid = world.get(name='Board')[0].get(Grid)
-    if grid.width * grid.height <= len(inhabited_positions):
-        raise Error('Unable to place entity in world due to all tiles being inhabited')
+
+    if not any(grid[i] is None for i in grid):
+        raise Error('Unable to place entity in world - Grid is full')
 
     while True:
         pos = Position(
-            random.randrange(0, GRID_COLUMNS),
-            random.randrange(0, GRID_ROWS))
-        if pos not in inhabited_positions:
+            random.randrange(0, grid.width),
+            random.randrange(0, grid.height))
+        if grid[pos] is None:
             break
 
     entity = world.create_entity()
     entity.add(pos)
     entity.add(Drawable(surface))
+    grid[pos] = entity
 
     return pos
 

@@ -43,12 +43,9 @@ def test_adding_too_many_entities_to_world():
     board.add(Grid(GRID_COLUMNS, GRID_ROWS))
 
     too_many = GRID_COLUMNS * GRID_ROWS + 1
-    inhabited_positions = []
     with pytest.raises(worldgen.Error) as err_info:
         for _ in range(too_many):
-            pos = worldgen.place_drawable_entity_randomly(
-                world, None, inhabited_positions)
-            inhabited_positions.append(pos)
+            pos = worldgen.place_drawable_entity_randomly(world, None)
     assert 'Unable to place entity' in str(err_info.value)
     assert len(world.get(has=[Position])) == too_many - 1
 
