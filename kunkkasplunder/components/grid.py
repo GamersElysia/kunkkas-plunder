@@ -1,5 +1,7 @@
 import itertools
 
+from .position import Position
+
 
 class Grid:
 
@@ -10,17 +12,23 @@ class Grid:
         self.values = []
 
     def __getitem__(self, key):
-        if not self.within_bounds(key):
+        if isinstance(key, Position):
+            x, y = key.x, key.y
+        else:
+            x, y = key
+        if not self._within_bounds(x, y):
             return
-        x, y = key
         if len(self.values) <= y or len(self.values[y]) <= x:
             return self.default_value
         return self.values[y][x]
 
     def __setitem__(self, key, value):
-        if not self.within_bounds(key):
+        if isinstance(key, Position):
+            x, y = key.x, key.y
+        else:
+            x, y = key
+        if not self._within_bounds(x, y):
             return
-        x, y = key
         while len(self.values) <= y:
             self.values.append([])
         while len(self.values[y]) <= x:
@@ -36,5 +44,5 @@ class Grid:
         return map(reversed, itertools.product(
             range(self.height), range(self.width)))
 
-    def within_bounds(self, key):
-        return 0 <= key[0] < self.width and 0 <= key[1] < self.height
+    def _within_bounds(self, x, y):
+        return 0 <= x < self.width and 0 <= y < self.height
