@@ -1,3 +1,6 @@
+import itertools
+
+
 class Grid:
 
     def __init__(self, width, height, default_value=None):
@@ -23,6 +26,15 @@ class Grid:
         while len(self.values[y]) <= x:
             self.values[y].append(self.default_value)
         self.values[y][x] = value
+
+    def __iter__(self):
+        """Iterate over all (x, y) tuples making up the coordinates of the Grid.
+
+        The x coordinate is increased first so the order of iteration is:
+        (0, 0) (1, 0) ... (0, 1) (1, 1) ...
+        """
+        return map(reversed, itertools.product(
+            range(self.height), range(self.width)))
 
     def within_bounds(self, key):
         return 0 <= key[0] < self.width and 0 <= key[1] < self.height
